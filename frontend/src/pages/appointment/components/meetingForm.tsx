@@ -37,6 +37,10 @@ const contactFormSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   guests: z.array(z.string().email("Please enter a valid email address")),
+  phoneNumber: z.string().min(6, "Số điện thoại không hợp lệ"),
+  demand: z.string().min(1, "Vui lòng nhập nhu cầu tư vấn"),
+  field: z.enum(["Sản xuất", "Thương mại", "Phân phối", "Dịch vụ", "Khác"]),
+
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
@@ -69,6 +73,9 @@ const MeetingForm = ({
     defaultValues: {
       fullName: "",
       email: "",
+      phoneNumber: "",
+      demand: "",
+      field: "Sản xuất",
       guests: [],
     },
   });
@@ -229,6 +236,84 @@ const MeetingForm = ({
                       form.formState.errors.email ? "text-red-500" : ""
                     }`}
                   />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={form.formState.errors.phoneNumber ? "text-red-500" : ""}>
+                    Số điện thoại <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="0912345678"
+                      className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
+                        form.formState.errors.phoneNumber
+                          ? "active:ring-red-500 focus-visible:ring-red-500"
+                          : ""
+                      }`}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className={form.formState.errors.phoneNumber ? "text-red-500" : ""} />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="demand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={form.formState.errors.demand ? "text-red-500" : ""}>
+                    Nhu cầu tư vấn <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Mô tả ngắn về nhu cầu của bạn..."
+                      className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
+                        form.formState.errors.demand
+                          ? "active:ring-red-500 focus-visible:ring-red-500"
+                          : ""
+                      }`}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className={form.formState.errors.demand ? "text-red-500" : ""} />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="field"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={form.formState.errors.field ? "text-red-500" : ""}>
+                    Lĩnh vực <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <select
+                      disabled={loading}
+                      className={`w-full border rounded-md px-3 py-2 ${
+                        form.formState.errors.field ? "border-red-500" : "border-gray-300"
+                      }`}
+                      {...field}
+                    >
+                      <option value="Sản xuất">Sản xuất</option>
+                      <option value="Thương mại">Thương mại</option>
+                      <option value="Phân phối">Phân phối</option>
+                      <option value="Dịch vụ">Dịch vụ</option>
+                      <option value="Khác">Khác</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage className={form.formState.errors.field ? "text-red-500" : ""} />
                 </FormItem>
               )}
             />

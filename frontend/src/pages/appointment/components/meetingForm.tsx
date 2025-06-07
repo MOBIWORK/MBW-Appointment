@@ -36,10 +36,11 @@ import Spinner from "@/components/spinner";
 const contactFormSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
-  guests: z.array(z.string().email("Please enter a valid email address")),
   phoneNumber: z.string().min(6, "Số điện thoại không hợp lệ"),
+  company: z.string().optional(),
   demand: z.string().min(1, "Vui lòng nhập nhu cầu tư vấn"),
   field: z.enum(["Sản xuất", "Thương mại", "Phân phối", "Dịch vụ", "Khác"]),
+  guests: z.array(z.string().email("Please enter a valid email address")),
 
 });
 
@@ -74,6 +75,7 @@ const MeetingForm = ({
       fullName: "",
       email: "",
       phoneNumber: "",
+      company: "",
       demand: "",
       field: "Sản xuất",
       guests: [],
@@ -150,7 +152,7 @@ const MeetingForm = ({
   return (
     <motion.div
       key={2}
-      className={`w-full md:h-[31rem] lg:w-[41rem] shrink-0 md:p-6 md:px-4`}
+      className="w-full md:h-screen lg:w-[41rem] shrink-0 md:p-6 md:px-4 overflow-auto"
       initial={isMobileView ? {} : { x: "100%" }}
       animate={{ x: 0 }}
       exit={isMobileView ? {} : { x: "100%" }}
@@ -177,31 +179,17 @@ const MeetingForm = ({
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel
-                    className={`${
-                      form.formState.errors.fullName ? "text-red-500" : ""
-                    }`}
-                  >
-                    Full Name{" "}
-                    <span className="text-red-500 dark:text-red-600">*</span>
-                  </FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
+                      placeholder="Họ và tên *"
                       className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                        form.formState.errors.fullName
-                          ? "active:ring-red-500 focus-visible:ring-red-500"
-                          : ""
+                        form.formState.errors.fullName ? "active:ring-red-500 focus-visible:ring-red-500" : ""
                       }`}
-                      placeholder="John Doe"
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage
-                    className={`${
-                      form.formState.errors.fullName ? "text-red-500" : ""
-                    }`}
-                  />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -211,31 +199,17 @@ const MeetingForm = ({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel
-                    className={`${
-                      form.formState.errors.email ? "text-red-500" : ""
-                    }`}
-                  >
-                    Email{" "}
-                    <span className="text-red-500 dark:text-red-600">*</span>
-                  </FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
+                      placeholder="Email để gửi Google Meeting *"
                       className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                        form.formState.errors.email
-                          ? "active:ring-red-500 focus-visible:ring-red-500"
-                          : ""
+                        form.formState.errors.email ? "active:ring-red-500 focus-visible:ring-red-500" : ""
                       }`}
-                      placeholder="john.Doe@gmail.com"
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage
-                    className={`${
-                      form.formState.errors.email ? "text-red-500" : ""
-                    }`}
-                  />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -245,22 +219,37 @@ const MeetingForm = ({
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={form.formState.errors.phoneNumber ? "text-red-500" : ""}>
-                    Số điện thoại <span className="text-red-500">*</span>
-                  </FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="0912345678"
+                      placeholder="Số điện thoại *"
                       className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                        form.formState.errors.phoneNumber
-                          ? "active:ring-red-500 focus-visible:ring-red-500"
-                          : ""
+                        form.formState.errors.phoneNumber ? "active:ring-red-500 focus-visible:ring-red-500" : ""
                       }`}
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className={form.formState.errors.phoneNumber ? "text-red-500" : ""} />
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="company"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Công ty"
+                      className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
+                        form.formState.errors.company ? "active:ring-red-500 focus-visible:ring-red-500" : ""
+                      }`}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -270,22 +259,17 @@ const MeetingForm = ({
               name="demand"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={form.formState.errors.demand ? "text-red-500" : ""}>
-                    Nhu cầu tư vấn <span className="text-red-500">*</span>
-                  </FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Mô tả ngắn về nhu cầu của bạn..."
+                      placeholder="Nhu cầu tư vấn *"
                       className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                        form.formState.errors.demand
-                          ? "active:ring-red-500 focus-visible:ring-red-500"
-                          : ""
+                        form.formState.errors.demand ? "active:ring-red-500 focus-visible:ring-red-500" : ""
                       }`}
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className={form.formState.errors.demand ? "text-red-500" : ""} />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -313,7 +297,7 @@ const MeetingForm = ({
                       <option value="Khác">Khác</option>
                     </select>
                   </FormControl>
-                  <FormMessage className={form.formState.errors.field ? "text-red-500" : ""} />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />

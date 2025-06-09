@@ -163,8 +163,8 @@ const MeetingForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col h-full"
         >
-          {/* Nội dung form chính */}
-          <div className="flex-1 overflow-auto px-4 py-2 space-y-6">
+          {/* Scrollable content */}
+          <div className="flex-1 overflow-auto space-y-6 px-4 py-2">
             <div className="space-y-4">
               <div className="flex gap-3 max-md:flex-col md:items-center md:justify-between">
                 <Typography variant="p" className="text-2xl">
@@ -176,7 +176,7 @@ const MeetingForm = ({
                 </Typography>
               </div>
 
-              {/* Họ và tên */}
+              {/* Input: Họ và tên */}
               <FormField
                 control={form.control}
                 name="fullName"
@@ -187,7 +187,9 @@ const MeetingForm = ({
                         disabled={loading}
                         placeholder="Họ và tên *"
                         className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.fullName ? "active:ring-red-500 focus-visible:ring-red-500" : ""
+                          form.formState.errors.fullName
+                            ? "active:ring-red-500 focus-visible:ring-red-500"
+                            : ""
                         }`}
                         {...field}
                       />
@@ -197,7 +199,7 @@ const MeetingForm = ({
                 )}
               />
 
-              {/* Email */}
+              {/* Input: Email */}
               <FormField
                 control={form.control}
                 name="email"
@@ -208,7 +210,9 @@ const MeetingForm = ({
                         disabled={loading}
                         placeholder="Email để gửi Google Meeting *"
                         className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.email ? "active:ring-red-500 focus-visible:ring-red-500" : ""
+                          form.formState.errors.email
+                            ? "active:ring-red-500 focus-visible:ring-red-500"
+                            : ""
                         }`}
                         {...field}
                       />
@@ -218,7 +222,7 @@ const MeetingForm = ({
                 )}
               />
 
-              {/* Số điện thoại */}
+              {/* Input: Số điện thoại */}
               <FormField
                 control={form.control}
                 name="phoneNumber"
@@ -229,7 +233,9 @@ const MeetingForm = ({
                         disabled={loading}
                         placeholder="Số điện thoại *"
                         className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.phoneNumber ? "active:ring-red-500 focus-visible:ring-red-500" : ""
+                          form.formState.errors.phoneNumber
+                            ? "active:ring-red-500 focus-visible:ring-red-500"
+                            : ""
                         }`}
                         {...field}
                       />
@@ -239,7 +245,7 @@ const MeetingForm = ({
                 )}
               />
 
-              {/* Công ty */}
+              {/* Input: Công ty */}
               <FormField
                 control={form.control}
                 name="company"
@@ -250,7 +256,9 @@ const MeetingForm = ({
                         disabled={loading}
                         placeholder="Công ty"
                         className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.company ? "active:ring-red-500 focus-visible:ring-red-500" : ""
+                          form.formState.errors.company
+                            ? "active:ring-red-500 focus-visible:ring-red-500"
+                            : ""
                         }`}
                         {...field}
                       />
@@ -260,7 +268,7 @@ const MeetingForm = ({
                 )}
               />
 
-              {/* Nhu cầu tư vấn */}
+              {/* Input: Nhu cầu */}
               <FormField
                 control={form.control}
                 name="demand"
@@ -271,7 +279,9 @@ const MeetingForm = ({
                         disabled={loading}
                         placeholder="Nhu cầu tư vấn *"
                         className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.demand ? "active:ring-red-500 focus-visible:ring-red-500" : ""
+                          form.formState.errors.demand
+                            ? "active:ring-red-500 focus-visible:ring-red-500"
+                            : ""
                         }`}
                         {...field}
                       />
@@ -281,20 +291,26 @@ const MeetingForm = ({
                 )}
               />
 
-              {/* Lĩnh vực */}
+              {/* Select: Lĩnh vực */}
               <FormField
                 control={form.control}
                 name="field"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={form.formState.errors.field ? "text-red-500" : ""}>
+                    <FormLabel
+                      className={
+                        form.formState.errors.field ? "text-red-500" : ""
+                      }
+                    >
                       Lĩnh vực <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
                       <select
                         disabled={loading}
                         className={`w-full border rounded-md px-3 py-2 ${
-                          form.formState.errors.field ? "border-red-500" : "border-gray-300"
+                          form.formState.errors.field
+                            ? "border-red-500"
+                            : "border-gray-300"
                         }`}
                         {...field}
                       >
@@ -310,7 +326,7 @@ const MeetingForm = ({
                 )}
               />
 
-              {/* Add Guests */}
+              {/* Guests section */}
               <div className="space-y-2">
                 <Button
                   type="button"
@@ -356,7 +372,7 @@ const MeetingForm = ({
             </div>
           </div>
 
-          {/* Footer với nút Back + Schedule */}
+          {/* Fixed Footer */}
           <div className="flex justify-between border-t bg-background px-4 py-3 md:static max-md:fixed max-md:bottom-0 max-md:left-0 max-md:w-full max-md:z-10">
             <Button
               type="button"

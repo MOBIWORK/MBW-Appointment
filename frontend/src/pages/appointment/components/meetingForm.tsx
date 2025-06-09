@@ -41,7 +41,6 @@ const contactFormSchema = z.object({
   demand: z.string().min(1, "Vui lòng nhập nhu cầu tư vấn"),
   field: z.enum(["Sản xuất", "Thương mại", "Phân phối", "Dịch vụ", "Khác"]),
   guests: z.array(z.string().email("Please enter a valid email address")),
-
 });
 
 type ContactFormValues = z.infer<typeof contactFormSchema>;
@@ -125,6 +124,10 @@ const MeetingForm = ({
       end_time: selectedSlot.end_time,
       user_name: data.fullName,
       user_email: data.email,
+      user_phone: data.phoneNumber,
+      user_company: data.company,
+      user_demand: data.demand,
+      user_field: data.field,
       other_participants: data.guests.join(", "),
     };
 
@@ -152,243 +155,148 @@ const MeetingForm = ({
   return (
     <motion.div
       key={2}
-      className="w-full md:h-screen lg:w-[41rem] shrink-0 md:p-6 md:px-4 flex flex-col"
+      className="w-full h-screen lg:w-[41rem] shrink-0 flex flex-col md:p-6 md:px-4"
       initial={isMobileView ? {} : { x: "100%" }}
       animate={{ x: 0 }}
       exit={isMobileView ? {} : { x: "100%" }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
     >
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col h-full"
-        >
-          {/* Scrollable content */}
-          <div className="flex-1 overflow-auto space-y-6 px-4 py-2">
-            <div className="space-y-4">
-              <div className="flex gap-3 max-md:flex-col md:items-center md:justify-between">
-                <Typography variant="p" className="text-2xl">
-                  Your contact info
-                </Typography>
-                <Typography className="text-sm mt-1 text-blue-500 dark:text-blue-400">
-                  <CalendarPlus className="inline-block w-4 h-4 mr-1 md:hidden" />
-                  {formatDate(selectedDate, "d MMM, yyyy")}
-                </Typography>
-              </div>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-y-auto px-4 space-y-6 pb-24">
+            {/* Header */}
+            <div className="flex gap-3 max-md:flex-col md:items-center md:justify-between">
+              <Typography variant="p" className="text-2xl">Thông tin liên hệ</Typography>
+              <Typography className="text-sm mt-1 text-blue-500 dark:text-blue-400">
+                <CalendarPlus className="inline-block w-4 h-4 mr-1 md:hidden" />
+                {formatDate(selectedDate, "d MMM, yyyy")}
+              </Typography>
+            </div>
 
-              {/* Input: Họ và tên */}
+            {/* Inputs */}
+            {[
+              { name: "fullName", placeholder: "Họ và tên *" },
+              { name: "email", placeholder: "Email để gửi Google Meeting *" },
+              { name: "phoneNumber", placeholder: "Số điện thoại *" },
+              { name: "company", placeholder: "Công ty" },
+              { name: "demand", placeholder: "Nhu cầu tư vấn *" },
+            ].map(({ name, placeholder }) => (
               <FormField
+                key={name}
                 control={form.control}
-                name="fullName"
+                name={name as keyof ContactFormValues}
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
                       <Input
+                        {...field}
+                        placeholder={placeholder}
                         disabled={loading}
-                        placeholder="Họ và tên *"
                         className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.fullName
+                          form.formState.errors[name as keyof ContactFormValues]
                             ? "active:ring-red-500 focus-visible:ring-red-500"
                             : ""
                         }`}
-                        {...field}
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
+            ))}
 
-              {/* Input: Email */}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="Email để gửi Google Meeting *"
-                        className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.email
-                            ? "active:ring-red-500 focus-visible:ring-red-500"
-                            : ""
-                        }`}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-
-              {/* Input: Số điện thoại */}
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="Số điện thoại *"
-                        className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.phoneNumber
-                            ? "active:ring-red-500 focus-visible:ring-red-500"
-                            : ""
-                        }`}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-
-              {/* Input: Công ty */}
-              <FormField
-                control={form.control}
-                name="company"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="Công ty"
-                        className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.company
-                            ? "active:ring-red-500 focus-visible:ring-red-500"
-                            : ""
-                        }`}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-
-              {/* Input: Nhu cầu */}
-              <FormField
-                control={form.control}
-                name="demand"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="Nhu cầu tư vấn *"
-                        className={`active:ring-blue-400 focus-visible:ring-blue-400 ${
-                          form.formState.errors.demand
-                            ? "active:ring-red-500 focus-visible:ring-red-500"
-                            : ""
-                        }`}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-
-              {/* Select: Lĩnh vực */}
-              <FormField
-                control={form.control}
-                name="field"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel
-                      className={
-                        form.formState.errors.field ? "text-red-500" : ""
-                      }
-                    >
-                      Lĩnh vực <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <select
-                        disabled={loading}
-                        className={`w-full border rounded-md px-3 py-2 ${
-                          form.formState.errors.field
-                            ? "border-red-500"
-                            : "border-gray-300"
-                        }`}
-                        {...field}
-                      >
-                        <option value="Sản xuất">Sản xuất</option>
-                        <option value="Thương mại">Thương mại</option>
-                        <option value="Phân phối">Phân phối</option>
-                        <option value="Dịch vụ">Dịch vụ</option>
-                        <option value="Khác">Khác</option>
-                      </select>
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-
-              {/* Guests section */}
-              <div className="space-y-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="h-auto hover:bg-blue-50 dark:hover:bg-blue-800/10 text-blue-500 dark:text-blue-400 hover:text-blue-600"
-                  onClick={() => setIsGuestsOpen(!isGuestsOpen)}
-                  disabled={loading}
-                >
-                  {isGuestsOpen ? "Hide Guests" : "+ Add Guests"}
-                </Button>
-
-                {isGuestsOpen && (
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="janedoe@hotmail.com, bob@gmail.com, etc."
-                      value={guestInput}
-                      className="active:ring-blue-400 focus-visible:ring-blue-400"
-                      onChange={(e) => setGuestInput(e.target.value)}
-                      onKeyDown={handleGuestKeyDown}
-                      onBlur={addGuest}
+            {/* Lĩnh vực */}
+            <FormField
+              control={form.control}
+              name="field"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className={form.formState.errors.field ? "text-red-500" : ""}>
+                    Lĩnh vực <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <select
+                      {...field}
                       disabled={loading}
-                    />
-                    <div className="flex flex-wrap gap-2">
-                      {form.watch("guests").map((guest) => (
-                        <div
-                          key={guest}
-                          className="flex items-center gap-1 px-2 py-1 bg-blue-500 dark:bg-blue-400 text-white dark:text-background rounded-full text-sm"
+                      className={`w-full border rounded-md px-3 py-2 ${
+                        form.formState.errors.field ? "border-red-500" : "border-gray-300"
+                      }`}
+                    >
+                      <option value="Sản xuất">Sản xuất</option>
+                      <option value="Thương mại">Thương mại</option>
+                      <option value="Phân phối">Phân phối</option>
+                      <option value="Dịch vụ">Dịch vụ</option>
+                      <option value="Khác">Khác</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+
+            {/* Guests */}
+            <div className="space-y-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setIsGuestsOpen(!isGuestsOpen)}
+                disabled={loading}
+                className="h-auto text-blue-500 dark:text-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-800/10"
+              >
+                {isGuestsOpen ? "Ẩn danh sách khách mời" : "+ Thêm khách mời"}
+              </Button>
+
+              {isGuestsOpen && (
+                <div className="space-y-2">
+                  <Input
+                    placeholder="janedoe@hotmail.com, bob@gmail.com, etc."
+                    value={guestInput}
+                    onChange={(e) => setGuestInput(e.target.value)}
+                    onKeyDown={handleGuestKeyDown}
+                    onBlur={addGuest}
+                    disabled={loading}
+                    className="active:ring-blue-400 focus-visible:ring-blue-400"
+                  />
+                  <div className="flex flex-wrap gap-2">
+                    {form.watch("guests").map((guest) => (
+                      <div
+                        key={guest}
+                        className="flex items-center gap-1 px-2 py-1 bg-blue-500 dark:bg-blue-400 text-white dark:text-background rounded-full text-sm"
+                      >
+                        <span>{guest}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeGuest(guest)}
+                          className="hover:text-blue-200"
                         >
-                          <span>{guest}</span>
-                          <button
-                            type="button"
-                            onClick={() => removeGuest(guest)}
-                            className="hover:text-blue-200"
-                          >
-                            <X className="h-3 w-3 dark:text-background" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
+                          <X className="h-3 w-3 dark:text-background" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Fixed Footer */}
+          {/* Footer */}
           <div className="flex justify-between border-t bg-background px-4 py-3 md:static max-md:fixed max-md:bottom-0 max-md:left-0 max-md:w-full max-md:z-10">
             <Button
               type="button"
-              className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-400 md:hover:bg-blue-50 md:dark:hover:bg-blue-800/10 max-md:px-0 max-md:hover:underline max-md:hover:bg-transparent"
-              onClick={onBack}
               variant="ghost"
+              onClick={onBack}
               disabled={loading}
+              className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-400 md:hover:bg-blue-50 md:dark:hover:bg-blue-800/10 max-md:px-0 max-md:hover:underline max-md:hover:bg-transparent"
             >
-              <ChevronLeft /> Back
+              <ChevronLeft /> Quay lại
             </Button>
             <Button
+              type="submit"
               disabled={loading}
               className="bg-blue-500 dark:bg-blue-400 hover:bg-blue-500 dark:hover:bg-blue-400"
-              type="submit"
             >
-              {loading && <Spinner />} Schedule Meeting
+              {loading && <Spinner />} Đặt lịch hẹn
             </Button>
           </div>
         </form>

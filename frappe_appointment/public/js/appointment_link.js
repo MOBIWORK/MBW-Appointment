@@ -37,6 +37,7 @@ function generate_table(data) {
         <thead>
             <tr>
                 <th>Event</th>
+                <th>Infor</th>
                 <th>Start</th>
                 <th>End</th>
                 <th>Status</th>
@@ -50,6 +51,7 @@ function generate_table(data) {
       : `<button class="btn btn-default btn-xs disabled" onclick="frappe.show_alert({message: __('Rescheduling is not allowed for this event.'), indicator: 'orange'});">Copy Reschedule Link</button>`;
     html += `<tr>
             <td>${event.subject}</td>
+            <td>Email: ${event.email} <br>Số điện thoại: ${event.phone_number} <br>Công ty: ${event.company} <br>Nhu cầu tư vấn: ${event.demand} fgdgfg th fdgf fdefgg <br>Lĩnh vực: ${event.sector}</td>
             <td>${event.starts_on}</td>
             <td>${event.ends_on}</td>
             <td>${event.status}</td>

@@ -31,6 +31,7 @@ import {
   parseFrappeErrorMsg,
 } from "@/lib/utils";
 import Spinner from "@/components/spinner";
+import {Select, SelectTrigger, SelectContent, SelectItem, SelectValue} from "@/components/select";
 
 const contactFormSchema = z.object({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
@@ -163,7 +164,7 @@ const MeetingForm = ({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col">
           {/* Scrollable content */}
-          <div className="flex-1 overflow-y-auto pr-1 space-y-6">
+          <div className="flex-1 pr-1 space-y-6 overflow-y-auto no-scrollbar">
             <div className="space-y-4">
               <div className="flex gap-3 max-md:flex-col md:items-center md:justify-between">
                 <Typography variant="p" className="text-2xl">
@@ -285,22 +286,23 @@ const MeetingForm = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <select
+                      <Select
                         disabled={loading}
-                        className={`w-full border rounded-md px-3 py-2 ${
-                          form.formState.errors.field ? "border-red-500" : "border-gray-300"
-                        }`}
-                        {...field}
+                        value={field.value}
+                        onValueChange={field.onChange}
                       >
-                        <option value="" disabled hidden>
-                          -- Lĩnh vực --
-                        </option>
-                        <option value="Sản xuất">Sản xuất</option>
-                        <option value="Thương mại">Thương mại</option>
-                        <option value="Phân phối">Phân phối</option>
-                        <option value="Dịch vụ">Dịch vụ</option>
-                        <option value="Khác">Khác</option>
-                      </select>
+                        <SelectTrigger
+                        >
+                          <SelectValue placeholder="-- Lĩnh vực --" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Sản xuất">Sản xuất</SelectItem>
+                          <SelectItem value="Thương mại">Thương mại</SelectItem>
+                          <SelectItem value="Phân phối">Phân phối</SelectItem>
+                          <SelectItem value="Dịch vụ">Dịch vụ</SelectItem>
+                          <SelectItem value="Khác">Khác</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>

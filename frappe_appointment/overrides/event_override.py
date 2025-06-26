@@ -512,6 +512,7 @@ def _create_event_for_appointment_group(
     event_participants="[]",
     success_message="",
     return_event_id=False,
+    info_person_schedule_meeting="[]",
     **args,
 ):
     # query parameters
@@ -601,7 +602,7 @@ def _create_event_for_appointment_group(
             return frappe.msgprint(_("Event has been updated successfully."))
         except Exception:
             return frappe.throw(_("Unable to Update an event"))
-
+    info_person_schedule_meeting = json.loads(info_person_schedule_meeting)[0]
     calendar_event = {
         "doctype": "Event",
         "subject": event_info.get("subject"),
@@ -619,6 +620,12 @@ def _create_event_for_appointment_group(
         "event_type": "Private",
         "custom_appointment_group": appointment_group.name,
         "event_info": event_info,
+        "full_name": info_person_schedule_meeting.get('full_name'),
+        "email": info_person_schedule_meeting.get('email'),
+        "phone_number": info_person_schedule_meeting.get('phone_number'),
+        "company": info_person_schedule_meeting.get('company'),
+        "demand": info_person_schedule_meeting.get('demand'),
+        "sector": info_person_schedule_meeting.get('sector'),
     }
 
     if personal:
@@ -828,6 +835,12 @@ def get_personal_meetings(user, past_events=False):
             "status",
             "custom_user_calendar",
             "custom_appointment_slot_duration",
+            "full_name",
+            "email",
+            "phone_number",
+            "company",
+            "demand",
+            "sector",
         ],
         order_by="starts_on",
     )

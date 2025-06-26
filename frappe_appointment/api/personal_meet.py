@@ -150,6 +150,10 @@ def book_time_slot(
     user_timezone_offset: str,
     user_name: str,
     user_email: str,
+    user_phone: str,
+    user_company: str,
+    user_demand: str,
+    user_field: str,
     other_participants: str = None,
     **args,
 ):
@@ -177,6 +181,16 @@ def book_time_slot(
         {
             "email": user_email,
         },
+    ]
+    info_person_schedule_meeting = [
+        {
+            "full_name": user_name,
+            "email": user_email,
+            "phone_number": user_phone,
+            "company": user_company,
+            "demand": user_demand,
+            "sector": user_field,
+        }
     ]
 
     if other_participants:
@@ -235,6 +249,7 @@ def book_time_slot(
         json.dumps(event_participants),
         success_message=success_message,
         return_event_id=True,
+        info_person_schedule_meeting=json.dumps(info_person_schedule_meeting),
         **args,
     )
 
